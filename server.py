@@ -25,7 +25,5 @@ def get_transcript():
         return jsonify({"error": "No transcript found for this video."}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-# ⬇️ ЭТО ОЧЕНЬ ВАЖНО! Render запускает приложение отсюда
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
