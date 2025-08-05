@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api.formatters import TextFormatter
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
 
 app = Flask(__name__)
@@ -18,15 +17,11 @@ def get_transcript():
         return jsonify({"error": "Missing videoId"}), 400
 
     try:
-        api = YouTubeTranscriptApi()
-        transcript_list = api.list_transcripts(video_id)
-
-        transcript = transcript_list.find_transcript([lang])
-        formatted = TextFormatter().format_transcript(transcript.fetch())
-
+        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=[lang])
+        full_text = " ".join([item['text'] for item in transcript])
         return jsonify({
             "videoId": video_id,
-            "text": formatted
+            "text": full_text
         })
 
     except TranscriptsDisabled:
